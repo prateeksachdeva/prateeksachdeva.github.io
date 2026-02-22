@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prateek Sachdeva — SDE-2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #1e1e2e;
+      --accent: #6ee7b7;
+      --accent2: #38bdf8;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --tag-bg: #1a2a3a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise Texture Overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── Glow Orbs ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.15;
+    }
+    .orb1 { width: 600px; height: 600px; background: #6ee7b7; top: -200px; right: -150px; animation: drift1 12s ease-in-out infinite alternate; }
+    .orb2 { width: 500px; height: 500px; background: #38bdf8; bottom: -100px; left: -100px; animation: drift2 15s ease-in-out infinite alternate; }
+    @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(-80px, 60px); } }
+    @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(60px, -80px); } }
+
+    /* ── Layout ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 0 56px;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.8s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4.5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title {
+      margin-top: 12px;
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .hero-title span {
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    .hero-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      padding-top: 8px;
+    }
+    .hero-contacts a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .hero-contacts a:hover { color: var(--accent); }
+    .hero-contacts svg { width: 14px; height: 14px; opacity: 0.6; }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 22px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.25s;
+    }
+    .download-btn:hover {
+      background: var(--accent);
+      color: #0a0a0f;
+    }
+
+    /* ── Section ── */
+    section {
+      padding: 56px 0 0;
+      animation: fadeUp 0.8s ease both;
+    }
+    section:nth-child(2) { animation-delay: 0.1s; }
+    section:nth-child(3) { animation-delay: 0.2s; }
+    section:nth-child(4) { animation-delay: 0.3s; }
+    section:nth-child(5) { animation-delay: 0.4s; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Skills ── */
+    .skills-group { margin-bottom: 20px; }
+    .skills-group-label {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12.5px;
+      padding: 5px 14px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(110,231,183,0.05);
+    }
+
+    /* ── Experience Card ── */
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .exp-card:hover { border-color: #2a2a3e; transform: translateX(4px); }
+    .exp-card:hover::before { opacity: 1; }
+
+    .exp-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .exp-company {
+      font-family: 'Syne', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .exp-date {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 3px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .exp-role {
+      color: var(--accent2);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .exp-location {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    .exp-bullets li {
+      font-size: 13.5px;
+      color: #94a3b8;
+      line-height: 1.65;
+      padding-left: 20px;
+      position: relative;
+    }
+    .exp-bullets li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 12px;
+      top: 2px;
+    }
+    .exp-bullets li strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── Stats row ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat:hover { border-color: var(--accent); }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Education ── */
+    .edu-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .edu-school {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .edu-degree {
+      color: var(--accent2);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .edu-year {
+      font-size: 13px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .hero-name { white-space: normal; font-size: 32px; }
+      .hero-contacts { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+      .exp-card { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-top">
+    <div>
+      <div class="hero-label">Software Development Engineer</div>
+      <h1 class="hero-name">Prateek Sachdeva</h1>
+      <p class="hero-title">Backend Engineer · <span>5+ Years Building Fintech at Scale</span></p>
+      <a class="download-btn" href="prateek_resume.pdf" download="Prateek_Sachdeva_Resume.pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Resume
+      </a>
+    </div>
+    <div class="hero-contacts">
+      <a href="tel:9999346832">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        9999346832
+      </a>
+      <a href="mailto:june24.prateek@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        june24.prateek@gmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/prateek-sachdeva-0986a213b" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        New Delhi, India
+      </a>
+    </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number">5+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">1.5M+</div>
+        <div class="stat-label">Borrowers Served</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">500K+</div>
+        <div class="stat-label">Transactions/Month</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">99.99%</div>
+        <div class="stat-label">Uptime Achieved</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="section-header">
+      <span class="section-title">Technical Skills</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Languages</div>
+      <div class="tags">
+        <span class="tag">C</span>
+        <span class="tag">C++</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Java</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Core Expertise</div>
+      <div class="tags">
+        <span class="tag">System Design</span>
+        <span class="tag">Data Structures</span>
+        <span class="tag">Algorithms</span>
+        <span class="tag">REST API</span>
+        <span class="tag">Microservices</span>
+        <span class="tag">Event-Driven Architecture</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Technologies & Frameworks</div>
+      <div class="tags">
+        <span class="tag">Node.js</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Redis</span>
+        <span class="tag">Docker</span>
+        <span class="tag">AWS</span>
+        <span class="tag">AWS SNS/SQS</span>
+        <span class="tag">API Gateway</span>
+        <span class="tag">Step Functions</span>
+        <span class="tag">SpringBoot</span>
+        <span class="tag">GIT</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section>
+    <div class="section-header">
+      <span class="section-title">Experience</span>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Per Annum -->
+    <div class="exp-card">
+      <div class="exp-top">
+        <span class="exp-company">Per Annum</span>
+        <span class="exp-date">May 2022 – Present</span>
+      </div>
+      <div class="exp-role">Software Development Engineer – 2</div>
+      <div class="exp-location">📍 New Delhi</div>
+      <ul class="exp-bullets">
+        <li><strong>Monolith to Microservices:</strong> Refactored a legacy system into 6+ TypeScript microservices, improving code maintainability by 60% and deployment speed by 40%.</li>
+        <li><strong>Cross-System Webhook Architecture (AWS):</strong> Built event-driven webhook system using AWS SNS, SQS, API Gateway, and Step Functions with 99.99% uptime across 5+ databases.</li>
+        <li><strong>Company Admin Platform:</strong> Planned, created, deployed, and maintained a Company Admin system from scratch as sole backend owner — on-time delivery, 24/7 stability.</li>
+        <li><strong>Loan Workflows for 1.5M+ Borrowers:</strong> Developed core backend for foreclosure, disbursement, cancellation & repayment with 100% data consistency via Redis-based locking.</li>
+        <li><strong>Automated Credit Scoring:</strong> Built AWS SQS-based services for CIBIL fetch, loan agreement creation & KFS delivery — processing 5,000+ profiles/day at 99% success rate.</li>
+        <li><strong>Investor Payout Engine:</strong> Engineered a ₹5 Cr+ daily transaction engine; reduced processing time from 10 hours to 2 hours using SQL partitioning, boosting reinvestment efficiency by 35%.</li>
+        <li><strong>Centralized Notification System:</strong> Built scalable notifications (Email, WhatsApp, SMS) via Karix & Gupshup — handling 100K+ messages/month using async server-worker model.</li>
+        <li><strong>Mass Loan Correction Without Downtime:</strong> Corrected 700,000+ loan records with async batch jobs while maintaining 100% uptime and compliance.</li>
+        <li><strong>SIP System:</strong> Designed full SIP workflow with daily auto-debits, skip/cancel/reschedule support — achieving 99.9% success rate.</li>
+        <li><strong>Partner Fintech Integrations:</strong> Led integrations with MobiKwik, Khatabook, and NAVI — supporting 500K+ transactions/month with &lt;1% incident rate.</li>
+      </ul>
+    </div>
+
+    <!-- Accenture -->
+    <div class="exp-card">
+      <div class="exp-top">
+        <span class="exp-company">Accenture</span>
+        <span class="exp-date">Oct 2019 – April 2021</span>
+      </div>
+      <div class="exp-role">Associate Software Engineer</div>
+      <div class="exp-location">📍 Gurgaon</div>
+      <ul class="exp-bullets">
+        <li><strong>Backend Feature Development:</strong> Built and refined backend features for key financial modules with RESTful APIs and relational DB design — handling high-throughput traffic at &lt;100ms response time.</li>
+        <li><strong>End-to-End Module Ownership:</strong> Owned modules from requirement gathering to production with 99.9%+ uptime and clean architecture principles.</li>
+        <li><strong>Internal Tools & Automation:</strong> Built monitoring utilities, data reconciliation tools, and admin interfaces using Python, Node.js, and shell scripting — reducing manual workload by 40%.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section>
+    <div class="section-header">
+      <span class="section-title">Education</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-card">
+      <div>
+        <div class="edu-school">Maharaja Surajmal Institute of Technology</div>
+        <div class="edu-degree">Bachelor of Technology in Computer Science</div>
+      </div>
+      <div class="edu-year">2015 – 2019 · New Delhi</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Prateek Sachdeva · Software Development Engineer · New Delhi</p>
+  <p style="margin-top:6px; font-size:11px;">Built with ❤️ — 2025</p>
+</footer>
+
+</body>
+</html>
