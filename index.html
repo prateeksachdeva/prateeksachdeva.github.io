@@ -77,11 +77,10 @@
     }
 
     .hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
       gap: 40px;
-      flex-wrap: wrap;
     }
 
     .hero-label {
@@ -106,11 +105,10 @@
 
     .hero-name {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 4.5vw, 52px);
+      font-size: 42px;
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -0.02em;
-      white-space: nowrap;
       background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -389,9 +387,10 @@
       z-index: 1;
     }
 
-    @media (max-width: 600px) {
-      .hero-name { white-space: normal; font-size: 32px; }
-      .hero-contacts { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    @media (max-width: 650px) {
+      .hero-top { grid-template-columns: 1fr; }
+      .hero-name { font-size: 30px; }
+      .hero-contacts { align-items: flex-start; }
       .exp-card { padding: 22px 18px; }
     }
   </style>
@@ -420,9 +419,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
         9999346832
       </a>
-      <a href="mailto:june24.prateek@gmail.com">
+      <a href="/cdn-cgi/l/email-protection#8ce6f9e2e9beb8a2fcfeedf8e9e9e7ccebe1ede5e0a2efe3e1">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        june24.prateek@gmail.com
+        <span class="__cf_email__" data-cfemail="375d4259520503194745564352525c77505a565e5b1954585a">[email&#160;protected]</span>
       </a>
       <a href="https://www.linkedin.com/in/prateek-sachdeva-0986a213b" target="_blank">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
@@ -572,9 +571,4 @@
 </div>
 
 <footer>
-  <p>Prateek Sachdeva · Software Development Engineer · New Delhi</p>
-  <p style="margin-top:6px; font-size:11px;">Built with ❤️ — 2025</p>
-</footer>
-
-</body>
-</html>
+  <p>Prateek Sachdeva · Softw
